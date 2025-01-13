@@ -55,7 +55,7 @@ class DateTimeEncoder(json.JSONEncoder):
 
 # Initialize the Telegram Client for user account
 with TelegramClient(
-    session="./session.ghst.session",
+    session=f"./session.{api_id}.session",
     api_id=_statix["id"],
     api_hash=_statix["hash"]
 ) as client:
