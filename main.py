@@ -12,6 +12,7 @@ from telethon import TelegramClient, utils
 from telethon.errors import SessionPasswordNeededError
 
 from dotenv import load_dotenv
+
 tracemalloc.start()
 
 ######################
@@ -29,9 +30,10 @@ _statix = {
     "hash": api_hash,  # API Hash for user account
     "phone": phone,  # Your phone number
     "chan": 0,  # Channel to interact with:
-    #String: Assumes a username, phone number, or invite link.
-    #Integer: Assumes a user ID, group ID, or channel ID, THAT IS NOT WORKING NOW.
-}
+    # String: Assumes a username, phone number, or invite link.
+    # Integer: Assumes a user ID, group ID, or channel ID, THAT IS NOT WORKING NOW.
+    "mode": 1,
+    "naming": 3}
 
 pprint("[*]", os.getcwd())
 start = time.time()
@@ -42,6 +44,30 @@ if not _statix['chan']:
         _statix['chan'] = int(ctx)
     else:
         _statix['chan'] = ctx
+
+allowed_modes, allowed_naming = (1, 2, 3), (1, 2, 3)
+
+if not _statix['mode']:
+    ctx = int(input('''Please select the mode:
+    1. Download all files.
+    2. Extract all links.
+    3. Download all files from the links
+    '''))
+    if ctx in allowed_modes:
+        _statix['mode'] = ctx
+    else:
+        raise ValueError(f'[*] ERROR: Mode not in allowed modes - {allowed_modes}')
+
+if not _statix['naming']:
+    ctx = int(input('''Please select the FILE naming convention:
+1.sha256 + extension.
+2.original filenames.
+3.original filenames + sha256 + extension.
+'''))
+    if ctx in allowed_naming:
+        _statix['naming'] = ctx
+    else:
+        raise ValueError(f'[*] ERROR: Naming convention not in allowed modes - {allowed_modes}')
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -55,9 +81,9 @@ class DateTimeEncoder(json.JSONEncoder):
 
 # Initialize the Telegram Client for user account
 with TelegramClient(
-    session=f"./session.{api_id}.session",
-    api_id=_statix["id"],
-    api_hash=_statix["hash"]
+        session=f"./session.{api_id}.session",
+        api_id=_statix["id"],
+        api_hash=_statix["hash"]
 ) as client:
     async def main():
         me = await client.get_me()
@@ -87,7 +113,8 @@ with TelegramClient(
             max_id = latest_message[0].id
             print(f"Max Post ID: {max_id}")
 
-        await downloader.Start(client, my_chan)
+        await downloader.Start(client, my_chan, _statix)
+
 
     client.loop.run_until_complete(main())
 
