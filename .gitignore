@@ -177,3 +177,5 @@ cython_debug/
 *.session
 /channels
 /venv
+qodana.yaml
+

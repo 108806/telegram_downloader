@@ -94,8 +94,3 @@ with TelegramClient(
 end = time.time()
 dif = end - start
 print(f"Time: {dif:.2f} seconds")
-
-
-
-
-
