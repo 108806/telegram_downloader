@@ -178,4 +178,9 @@ cython_debug/
 /channels
 /venv
 qodana.yaml
-
+*.env
+*.env.bk
+.env
+.env.bk
+/*/.env
+**/.env
