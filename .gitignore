@@ -175,7 +175,7 @@ cython_debug/
 #.idea/
 
 *.session
-*.sessioon-journal
+*.session-journal
 /app/channels
 /channels
 /venv
